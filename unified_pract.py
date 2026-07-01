@@ -129,8 +129,9 @@ for k, v in DEFAULTS.items():
 # ═══════════════════════════════════════════════════════════════════════════════
 st.markdown("""
 <div class="hero">
-  <p class="hero-title">🔬 Electronics &amp; Physics Laboratory</p>
-  <p class="hero-sub">Department of Physics / Electronics · Solid State &amp; Power Electronics · Academic Simulation Platform</p>
+  <p class="hero-title">Virtual Physics/Electronics Laboratory</p>
+  <p class="hero-sub">Department of Physics / Electronics · SOLID STATE & ELECTRONICS</p>
+  <p class="hero-sub">PRACTICAL SIMULATION PLATFORM</p>
 </div>""", unsafe_allow_html=True)
 
 # ═══════════════════════════════════════════════════════════════════════════════
