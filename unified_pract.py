@@ -1108,5 +1108,5 @@ elif PAGE == "📡 P4: BJT Analysis":
 # FOOTER
 # ═══════════════════════════════════════════════════════════════════════════════
 st.markdown("---")
-st.caption(f"🔬 HND Electronics & Physics Laboratory Platform · Student: `{st.session_state['student_id']}` · "
+st.caption(f"🔬 Physics/Electronics Laboratory Platform · Student: `{st.session_state['student_id']}` · "
            f"Session Active · {datetime.now().strftime('%Y-%m-%d')}")
