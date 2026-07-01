@@ -129,7 +129,7 @@ for k, v in DEFAULTS.items():
 # ═══════════════════════════════════════════════════════════════════════════════
 st.markdown("""
 <div class="hero">
-  <p class="hero-title">🔬 Virtual Physics Electronics Laboratory</p>
+  <p class="hero-title">Virtual Physics Electronics Laboratory</p>
   <p class="hero-sub">Department of Physics / Electronics · Solid State &amp; Power Electronics · Practical Simulation Platform</p>
 </div>""", unsafe_allow_html=True)
 
@@ -140,9 +140,9 @@ if not st.session_state["auth"]:
     st.markdown('<p class="sec">// Student Identification — Laboratory Access</p>', unsafe_allow_html=True)
     c1, c2, c3 = st.columns([1, 1.5, 1])
     with c2:
-        st.markdown("Enter your **Matriculation Number** to initialise all four laboratory benches.")
+        st.markdown("Enter your **Matriculation Number** to initialise all FOUR modules.")
         mat = st.text_input("Matriculation Number", placeholder="e.g. PHY/HND/2024/018")
-        if st.button("▶  INITIALISE "):
+        if st.button("▶  LOGIN "):
             if mat.strip():
                 st.session_state["student_id"] = mat.strip()
                 st.session_state["auth"] = True
