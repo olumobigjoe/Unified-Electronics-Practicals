@@ -828,7 +828,7 @@ elif PAGE == "🛡️ P3: Zener Stabilizer":
           <line x1="80" y1="65" x2="160" y2="65" class="w"/>
           <!-- Series resistor Rs -->
           <rect x="160" y="50" width="90" height="30" rx="4" style="fill:#1a2a1a;stroke:#60a5fa;stroke-width:1.8"/>
-          <text x="205" y="69" text-anchor="middle" style="fill:#60a5fa;font-family:monospace;font-size:10px">Rs {rs:.0f}Ω</text>
+          <text x="205" y="69" text-anchor="middle" style="fill:#60a5fa;font-family:monospace;font-size:10px">Rs {rs:.Of}Ω</text>
           <!-- wire after Rs -->
           <line x1="250" y1="65" x2="360" y2="65" class="w"/>
           <!-- node dot -->
