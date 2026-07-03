@@ -806,13 +806,13 @@ elif PAGE == "🛡️ P3: Zener Stabilizer":
         across its terminals, acting as a voltage reference. The series resistor Rs limits current and
         absorbs the difference between input and regulated output.<br><br>
         <strong>Operating Regions:</strong><br>
-        &nbsp;&nbsp;• <em>Pre-breakdown (Vs &lt; Vz):</em> Zener is open; output = resistive divider Vo = Vs·RL/(Rs+RL)<br>
-        &nbsp;&nbsp;• <em>Regulation (Vs &gt; Vz):</em> Zener clamps output to ≈ Vz; excess voltage dropped across Rs<br><br>
+        &nbsp;&nbsp; <em>Pre-breakdown (Vs &lt; Vz):</em> Zener is open; output = resistive divider Vo = Vs·RL/(Rs+RL)<br>
+        &nbsp;&nbsp; <em>Regulation (Vs &gt; Vz):</em> Zener clamps output to ≈ Vz; excess voltage dropped across Rs<br><br>
         <strong>Key Equations:</strong><br>
-        &nbsp;&nbsp;• I_s = (Vs − Vz) / Rs<br>
-        &nbsp;&nbsp;• I_L = Vz / RL<br>
-        &nbsp;&nbsp;• I_z = I_s − I_L  (must remain &gt; I_z(min))<br>
-        &nbsp;&nbsp;• P_z = Vz × I_z  (must not exceed P_z(max))<br><br>
+        &nbsp;&nbsp; I_s = (Vs − Vz) / Rs<br>
+        &nbsp;&nbsp; I_L = Vz / RL<br>
+        &nbsp;&nbsp; I_z = I_s − I_L  (must remain &gt; I_z(min))<br>
+        &nbsp;&nbsp; P_z = Vz × I_z  (must not exceed P_z(max))<br><br>
         <strong>Current Zener Voltage:</strong> Vz = {vz} V &nbsp;|&nbsp; Rs = {rs} Ω &nbsp;|&nbsp; RL = {rl} Ω
         </div>""", unsafe_allow_html=True)
 
