@@ -811,7 +811,7 @@ elif PAGE == "🛡️ P3: Zener Stabilizer":
         <strong>Key Equations:</strong><br>
         &nbsp;&nbsp; I_s = (Vs - Vz) / Rs<br>
         &nbsp;&nbsp; I_L = Vz / RL<br>
-        &nbsp;&nbsp; I_z = I_s − I_L  (must remain &gt; I_z(min))<br>
+        &nbsp;&nbsp; I_z = I_s - I_L  (must remain &gt; I_z(min))<br>
         &nbsp;&nbsp; P_z = Vz × I_z  (must not exceed P_z(max))<br><br>
         <strong>Current Zener Voltage:</strong> Vz = {vz} V &nbsp;|&nbsp; Rs = {rs} Ω &nbsp;|&nbsp; RL = {rl} Ω
         </div>""", unsafe_allow_html=True)
