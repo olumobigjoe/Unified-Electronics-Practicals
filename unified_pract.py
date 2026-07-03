@@ -807,7 +807,7 @@ elif PAGE == "🛡️ P3: Zener Stabilizer":
         absorbs the difference between input and regulated output.<br><br>
         <strong>Operating Regions:</strong><br>
         &nbsp;&nbsp; <em>Pre-breakdown (Vs &lt; Vz):</em> Zener is open; output = resistive divider Vo = Vs·RL/(Rs+RL)<br>
-        &nbsp;&nbsp; <em>Regulation (Vs &gt; Vz):</em> Zener clamps output to ≈ Vz; excess voltage dropped across Rs<br><br>
+        &nbsp;&nbsp; <em>Regulation (Vs &gt; Vz):</em> Zener clamps output to apprxm Vz; excess voltage dropped across Rs<br><br>
         <strong>Key Equations:</strong><br>
         &nbsp;&nbsp; I_s = (Vs − Vz) / Rs<br>
         &nbsp;&nbsp; I_L = Vz / RL<br>
