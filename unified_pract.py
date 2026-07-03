@@ -108,8 +108,8 @@ def log_action(sid, action, detail=""):
 DEFAULTS = {
     "auth": False, "student_id": "", "page": "🏠 Dashboard",
     # P1 Diode
-    "si_data": pd.DataFrame(columns=["Voltage (V)", "Current Input", "Unit"]),
-    "ge_data": pd.DataFrame(columns=["Voltage (V)", "Current Input", "Unit"]),
+    "si_data": pd.DataFrame(columns=["Voltage (V)", "Current (mA)"]),
+    "ge_data": pd.DataFrame(columns=["Voltage (V)", "Current (mA)"]),
     "p1_score": None, "p1_submitted": False,
     # P2 Rectification
     "Vp": 12.0, "freq": 50,
@@ -355,30 +355,30 @@ elif PAGE == "🔌 P1: Diode Characteristics":
         st.markdown("### P1 Controls")
         material  = st.radio("Semiconductor Material:", ["Silicon (Si)", "Germanium (Ge)"])
         bias_mode = st.radio("Bias Region:", ["Forward Bias", "Reverse Bias"])
-        st.markdown("---")
-        if bias_mode == "Forward Bias":
-            v_in  = st.number_input("Voltage V (V):", 0.0, 5.0, 0.0, 0.05, format="%.2f")
-            c_unit= st.selectbox("Current Unit:", ["mA","µA"])
-            i_raw = st.number_input("Measured Current:", 0.0, 500.0, 0.0, 0.1, format="%.2f")
+        # Shockley diode parameters
+        # Si: Is=1e-9 A, n=1.8  |  Ge: Is=1e-6 A, n=1.0
+        Vt = 0.02585  # thermal voltage at 300 K
+        if material == "Silicon (Si)":
+            Is, n_ideal = 1e-9, 1.8
         else:
-            v_in  = st.number_input("Voltage V (Neg V):", -100.0, 0.0, 0.0, 1.0, format="%.2f")
-            c_unit= st.selectbox("Current Unit:", ["µA","mA"])
-            i_raw = st.number_input("Leakage Current (−):", -500.0, 0.0, 0.0, 0.1, format="%.2f")
-
-        if st.button("➕ Log Data Point"):
-            nr = pd.DataFrame([{"Voltage (V)": round(v_in,2), "Current Input": round(i_raw,2), "Unit": c_unit}])
-            key = "si_data" if material == "Silicon (Si)" else "ge_data"
-            st.session_state[key] = (
-                pd.concat([st.session_state[key], nr], ignore_index=True)
-                .drop_duplicates(subset=["Voltage (V)"])
-                .sort_values("Voltage (V)")
-            )
-            log_action(st.session_state["student_id"], "P1_DataPoint", f"{material} V={v_in} I={i_raw}{c_unit}")
-            st.toast("Data point logged!", icon="📝")
-
-        if st.button("🗑️ Clear Data"):
-            key = "si_data" if material == "Silicon (Si)" else "ge_data"
-            st.session_state[key] = pd.DataFrame(columns=["Voltage (V)", "Current Input", "Unit"])
+            Is, n_ideal = 1e-6, 1.0
+ 
+        if bias_mode == "Forward Bias":
+            v_in = st.number_input("Voltage V (V):", 0.0, 5.0, 0.0, 0.05, format="%.2f")
+        else:
+            v_in = st.number_input("Voltage V (Neg V):", -100.0, 0.0, 0.0, 1.0, format="%.2f")
+ 
+        # Auto-calculate current via Shockley equation
+        i_calc_a  = Is * (np.exp(np.clip(v_in / (n_ideal * Vt), -500, 500)) - 1)
+        i_calc_ma = round(float(i_calc_a) * 1000, 6)
+ 
+        # Display computed current
+        i_disp = f"{i_calc_ma:.4f} mA" if abs(i_calc_ma) >= 0.001 else f"{i_calc_ma*1000:.4f} µA"
+        st.markdown(f'<div style="background:#0a1628;border:1px solid #1e4a7f;border-radius:6px;'
+                    f'padding:10px;text-align:center;margin:6px 0;">'
+                    f'<span style="font-size:.68rem;color:#7a9cc4;text-transform:uppercase;'
+                    f'letter-spacing:.08em;">Computed Current</span><br>'
+                    f'<span style="font-family:\'Share Tech Mono\',monospace;font-size:1.1rem;'
             st.rerun()
 
     tab_theory, tab_sim, tab_assess = st.tabs(["📐 Theory", "📊 Simulation", "📝 Assessment"])
@@ -442,46 +442,46 @@ elif PAGE == "🔌 P1: Diode Characteristics":
     # ── Simulation ──
     with tab_sim:
         st.markdown('<p class="sec">// I-V Characteristic Curve Tracer</p>', unsafe_allow_html=True)
-
-        def to_ma(df):
-            if df.empty: return df.copy()
-            df = df.copy()
-            df["I_mA"] = df.apply(
-                lambda r: round(r["Current Input"]/1000, 4) if "µ" in r["Unit"] else round(r["Current Input"], 2),
-                axis=1)
-            return df
-
-        si_plot = to_ma(st.session_state["si_data"])
-        ge_plot = to_ma(st.session_state["ge_data"])
-
-        col_g, col_t = st.columns([2,1])
+<!-- Return wire -->
+          <line x1="520" y1="50" x2="580" y2="50" class="w"/>
+          <line x1="580" y1="50" x2="580" y2="110" class="w"/>
+          <line x1="90"  y1="110" x2="580" y2="110" class="w"/>
+          <!-- Voltmeter -->
+          <circle cx="510" cy="82" r="18" class="w"/>
+          <text x="510" y="87" text-anchor="middle" style="fill:#facc15;font-family:monospace;font-size:11px">V</text>
+          <line x1="510" y1="64"  x2="510" y2="56" class="w"/>
+          <line x1="510" y1="100" x2="510" y2="110" class="w"/>
+          <!-- Labels -->
+          <text x="140" y="43" style="fill:#7a9cc4;font-family:monospace;font-size:9px">Forward/Reverse Bias</text>
+          <text x="90"  y="148" style="fill:#7a9cc4;font-family:monospace;font-size:9px">Variable PSU</text>
+        </svg>""", height=185, scrolling=False)
+ 
+    # ── Simulation ──
+    with tab_sim:
+        st.markdown('<p class="sec">// I-V Characteristic Curve Tracer</p>', unsafe_allow_html=True)
+ 
+        si_df = st.session_state["si_data"]
+        ge_df = st.session_state["ge_data"]
+ 
+        col_g, col_t = st.columns([2, 1])
         with col_g:
             fig = go.Figure()
-            if not si_plot.empty:
-                fig.add_trace(go.Scatter(x=si_plot["Voltage (V)"], y=si_plot["I_mA"],
+            if not si_df.empty:
+                fig.add_trace(go.Scatter(
+                    x=si_df["Voltage (V)"], y=si_df["Current (mA)"],
                     mode="markers+lines", name="Silicon (Si)",
                     marker=dict(color="#60a5fa", size=8),
                     line=dict(color="#60a5fa", width=2)))
-            if not ge_plot.empty:
-                fig.add_trace(go.Scatter(x=ge_plot["Voltage (V)"], y=ge_plot["I_mA"],
+            if not ge_df.empty:
+                fig.add_trace(go.Scatter(
+                    x=ge_df["Voltage (V)"], y=ge_df["Current (mA)"],
                     mode="markers+lines", name="Germanium (Ge)",
                     marker=dict(color="#fb923c", size=8, symbol="square"),
                     line=dict(color="#fb923c", width=2, dash="dot")))
-            fig.update_layout(template="plotly_dark", paper_bgcolor="#070b14",
+            fig.update_layout(
+                template="plotly_dark", paper_bgcolor="#070b14",
                 plot_bgcolor="#0a0f1a", height=420,
-                xaxis=dict(title="Applied Voltage (V)", zeroline=True, zerolinecolor="#2a4a6a", gridcolor="#1a2a3a"),
-                yaxis=dict(title="Diode Current (mA)",  zeroline=True, zerolinecolor="#2a4a6a", gridcolor="#1a2a3a"),
-                font=dict(family="Share Tech Mono", color="#c0d4e8", size=11),
-                legend=dict(orientation="h", y=-0.2, bgcolor="rgba(0,0,0,0)"),
-                margin=dict(l=10,r=10,t=20,b=10))
-            st.plotly_chart(fig, use_container_width=True)
-            if si_plot.empty and ge_plot.empty:
-                st.info("Log data points from the sidebar to trace the I-V characteristics.")
-
-        with col_t:
-            st.markdown(f"**{material} — Logged Data**")
-            key = "si_data" if material == "Silicon (Si)" else "ge_data"
-            st.dataframe(st.session_state[key], use_container_width=True, hide_index=True)
+                xaxis=dict(title="Applied Voltage (V)", zeroline=True,
             st.caption("µA values auto-scaled to mA on the plot.")
 
     # ── Assessment ──
