@@ -629,11 +629,11 @@ elif PAGE == "⚡ P2: Rectification":
               <line x1="110" y1="75" x2="200" y2="75" class="w"/>
               <polygon points="200,61 200,89 234,75" style="fill:#818cf8;stroke:#818cf8"/>
               <line x1="234" y1="60" x2="234" y2="90" style="stroke:#818cf8;stroke-width:3"/>
-              <text x="217" y="52" text-anchor="middle" style="fill:#818cf8;font-family:monospace;font-size:11px;font-weight:bold">D₁</text>
+              <text x="217" y="52" text-anchor="middle" style="fill:#818cf8;font-family:monospace;font-size:11px;font-weight:bold">D1</text>
               <line x1="110" y1="145" x2="200" y2="145" class="w"/>
               <polygon points="200,131 200,159 234,145" style="fill:#818cf8;stroke:#818cf8"/>
               <line x1="234" y1="130" x2="234" y2="160" style="stroke:#818cf8;stroke-width:3"/>
-              <text x="217" y="174" text-anchor="middle" style="fill:#818cf8;font-family:monospace;font-size:11px;font-weight:bold">D₂</text>
+              <text x="217" y="174" text-anchor="middle" style="fill:#818cf8;font-family:monospace;font-size:11px;font-weight:bold">D2</text>
               <line x1="234" y1="75"  x2="330" y2="75"  class="w"/>
               <line x1="234" y1="145" x2="330" y2="145" class="w"/>
               <line x1="330" y1="75"  x2="330" y2="94"  class="w"/>
