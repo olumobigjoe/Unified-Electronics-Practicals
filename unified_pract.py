@@ -680,7 +680,7 @@ elif PAGE == "⚡ P2: Rectification":
               <polygon points="240,140 256,152 248,128" style="fill:#fb923c;stroke:#fb923c"/>
               <line x1="256" y1="142" x2="256" y2="164" style="stroke:#fb923c;stroke-width:3"/>
               <line x1="256" y1="153" x2="300" y2="175" class="w"/>
-              <text x="218" y="166" style="fill:#fb923c;font-family:monospace;font-size:10px;font-weight:bold">D₄</text>
+              <text x="218" y="166" style="fill:#fb923c;font-family:monospace;font-size:10px;font-weight:bold">D4</text>
               <!-- D2 -->
               <line x1="300" y1="175" x2="344" y2="152" class="w"/>
               <polygon points="344,152 336,130 352,142" style="fill:#fb923c;stroke:#fb923c"/>
