@@ -668,13 +668,13 @@ elif PAGE == "⚡ P2: Rectification":
               <polygon points="240,90 256,78 248,102" style="fill:#fb923c;stroke:#fb923c"/>
               <line x1="256" y1="68" x2="256" y2="90" style="stroke:#fb923c;stroke-width:3"/>
               <line x1="256" y1="79" x2="300" y2="55" class="w"/>
-              <text x="230" y="70" style="fill:#fb923c;font-family:monospace;font-size:10px;font-weight:bold">D₁</text>
+              <text x="230" y="70" style="fill:#fb923c;font-family:monospace;font-size:10px;font-weight:bold">D1</text>
               <!-- D3 -->
               <line x1="300" y1="55"  x2="344" y2="78" class="w"/>
               <polygon points="344,78 336,100 352,90" style="fill:#fb923c;stroke:#fb923c"/>
               <line x1="352" y1="68" x2="352" y2="92" style="stroke:#fb923c;stroke-width:3"/>
               <line x1="352" y1="80" x2="390" y2="115" class="w"/>
-              <text x="348" y="62" style="fill:#fb923c;font-family:monospace;font-size:10px;font-weight:bold">D₃</text>
+              <text x="348" y="62" style="fill:#fb923c;font-family:monospace;font-size:10px;font-weight:bold">D3</text>
               <!-- D4 -->
               <line x1="210" y1="115" x2="240" y2="140" class="w"/>
               <polygon points="240,140 256,152 248,128" style="fill:#fb923c;stroke:#fb923c"/>
@@ -686,7 +686,7 @@ elif PAGE == "⚡ P2: Rectification":
               <polygon points="344,152 336,130 352,142" style="fill:#fb923c;stroke:#fb923c"/>
               <line x1="352" y1="130" x2="352" y2="154" style="stroke:#fb923c;stroke-width:3"/>
               <line x1="352" y1="141" x2="390" y2="115" class="w"/>
-              <text x="348" y="172" style="fill:#fb923c;font-family:monospace;font-size:10px;font-weight:bold">D₂</text>
+              <text x="348" y="172" style="fill:#fb923c;font-family:monospace;font-size:10px;font-weight:bold">D2</text>
               <!-- Load -->
               <line x1="390" y1="115" x2="440" y2="115" class="w"/>
               <rect x="440" y="94"  width="80" height="42" rx="4" style="fill:#2a1a0a;stroke:#fb923c;stroke-width:1.8"/>
