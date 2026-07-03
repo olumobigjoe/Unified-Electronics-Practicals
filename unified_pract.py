@@ -10,7 +10,7 @@ import os
 # PAGE CONFIG
 # ═══════════════════════════════════════════════════════════════════════════════
 st.set_page_config(
-    page_title="Electronics Lab",
+    page_title="HND Electronics Lab",
     page_icon="🔬",
     layout="wide",
     initial_sidebar_state="expanded"
@@ -129,9 +129,8 @@ for k, v in DEFAULTS.items():
 # ═══════════════════════════════════════════════════════════════════════════════
 st.markdown("""
 <div class="hero">
-  <p class="hero-title">Virtual Physics/Electronics Laboratory</p>
-  <p class="hero-sub">Department of Physics / Electronics · SOLID STATE & ELECTRONICS</p>
-  <p class="hero-sub">PRACTICAL SIMULATION PLATFORM</p>
+  <p class="hero-title">🔬 HND Electronics &amp; Physics Laboratory</p>
+  <p class="hero-sub">Department of Physics / Electronics · Solid State &amp; Power Electronics · Academic Simulation Platform</p>
 </div>""", unsafe_allow_html=True)
 
 # ═══════════════════════════════════════════════════════════════════════════════
@@ -141,9 +140,9 @@ if not st.session_state["auth"]:
     st.markdown('<p class="sec">// Student Identification — Laboratory Access Control</p>', unsafe_allow_html=True)
     c1, c2, c3 = st.columns([1, 1.5, 1])
     with c2:
-        st.markdown("Enter your **Matriculation Number** to ACCESS all Four MODULES")
+        st.markdown("Enter your **Matriculation Number** to initialise all four laboratory benches.")
         mat = st.text_input("Matriculation Number", placeholder="e.g. PHY/HND/2024/018")
-        if st.button("▶  LOGIN"):
+        if st.button("▶  INITIALISE LABORATORY PLATFORM"):
             if mat.strip():
                 st.session_state["student_id"] = mat.strip()
                 st.session_state["auth"] = True
@@ -355,6 +354,7 @@ elif PAGE == "🔌 P1: Diode Characteristics":
         st.markdown("### P1 Controls")
         material  = st.radio("Semiconductor Material:", ["Silicon (Si)", "Germanium (Ge)"])
         bias_mode = st.radio("Bias Region:", ["Forward Bias", "Reverse Bias"])
+        st.markdown("---")
         # Shockley diode parameters
         # Si: Is=1e-9 A, n=1.8  |  Ge: Is=1e-6 A, n=1.0
         Vt = 0.02585  # thermal voltage at 300 K
@@ -362,16 +362,16 @@ elif PAGE == "🔌 P1: Diode Characteristics":
             Is, n_ideal = 1e-9, 1.8
         else:
             Is, n_ideal = 1e-6, 1.0
- 
+
         if bias_mode == "Forward Bias":
             v_in = st.number_input("Voltage V (V):", 0.0, 5.0, 0.0, 0.05, format="%.2f")
         else:
             v_in = st.number_input("Voltage V (Neg V):", -100.0, 0.0, 0.0, 1.0, format="%.2f")
- 
+
         # Auto-calculate current via Shockley equation
         i_calc_a  = Is * (np.exp(np.clip(v_in / (n_ideal * Vt), -500, 500)) - 1)
         i_calc_ma = round(float(i_calc_a) * 1000, 6)
- 
+
         # Display computed current
         i_disp = f"{i_calc_ma:.4f} mA" if abs(i_calc_ma) >= 0.001 else f"{i_calc_ma*1000:.4f} µA"
         st.markdown(f'<div style="background:#0a1628;border:1px solid #1e4a7f;border-radius:6px;'
@@ -379,6 +379,23 @@ elif PAGE == "🔌 P1: Diode Characteristics":
                     f'<span style="font-size:.68rem;color:#7a9cc4;text-transform:uppercase;'
                     f'letter-spacing:.08em;">Computed Current</span><br>'
                     f'<span style="font-family:\'Share Tech Mono\',monospace;font-size:1.1rem;'
+                    f'color:#00d4ff;">{i_disp}</span></div>', unsafe_allow_html=True)
+
+        if st.button("➕ Log Data Point"):
+            nr = pd.DataFrame([{"Voltage (V)": round(v_in, 2), "Current (mA)": i_calc_ma}])
+            key = "si_data" if material == "Silicon (Si)" else "ge_data"
+            st.session_state[key] = (
+                pd.concat([st.session_state[key], nr], ignore_index=True)
+                .drop_duplicates(subset=["Voltage (V)"])
+                .sort_values("Voltage (V)")
+            )
+            log_action(st.session_state["student_id"], "P1_DataPoint",
+                       f"{material} V={v_in} I={i_calc_ma}mA")
+            st.toast("Data point logged!", icon="📝")
+
+        if st.button("🗑️ Clear Data"):
+            key = "si_data" if material == "Silicon (Si)" else "ge_data"
+            st.session_state[key] = pd.DataFrame(columns=["Voltage (V)", "Current (mA)"])
             st.rerun()
 
     tab_theory, tab_sim, tab_assess = st.tabs(["📐 Theory", "📊 Simulation", "📝 Assessment"])
@@ -442,27 +459,10 @@ elif PAGE == "🔌 P1: Diode Characteristics":
     # ── Simulation ──
     with tab_sim:
         st.markdown('<p class="sec">// I-V Characteristic Curve Tracer</p>', unsafe_allow_html=True)
-<!-- Return wire -->
-          <line x1="520" y1="50" x2="580" y2="50" class="w"/>
-          <line x1="580" y1="50" x2="580" y2="110" class="w"/>
-          <line x1="90"  y1="110" x2="580" y2="110" class="w"/>
-          <!-- Voltmeter -->
-          <circle cx="510" cy="82" r="18" class="w"/>
-          <text x="510" y="87" text-anchor="middle" style="fill:#facc15;font-family:monospace;font-size:11px">V</text>
-          <line x1="510" y1="64"  x2="510" y2="56" class="w"/>
-          <line x1="510" y1="100" x2="510" y2="110" class="w"/>
-          <!-- Labels -->
-          <text x="140" y="43" style="fill:#7a9cc4;font-family:monospace;font-size:9px">Forward/Reverse Bias</text>
-          <text x="90"  y="148" style="fill:#7a9cc4;font-family:monospace;font-size:9px">Variable PSU</text>
-        </svg>""", height=185, scrolling=False)
- 
-    # ── Simulation ──
-    with tab_sim:
-        st.markdown('<p class="sec">// I-V Characteristic Curve Tracer</p>', unsafe_allow_html=True)
- 
+
         si_df = st.session_state["si_data"]
         ge_df = st.session_state["ge_data"]
- 
+
         col_g, col_t = st.columns([2, 1])
         with col_g:
             fig = go.Figure()
@@ -482,7 +482,21 @@ elif PAGE == "🔌 P1: Diode Characteristics":
                 template="plotly_dark", paper_bgcolor="#070b14",
                 plot_bgcolor="#0a0f1a", height=420,
                 xaxis=dict(title="Applied Voltage (V)", zeroline=True,
-            st.caption("µA values auto-scaled to mA on the plot.")
+                           zerolinecolor="#2a4a6a", gridcolor="#1a2a3a"),
+                yaxis=dict(title="Diode Current (mA)", zeroline=True,
+                           zerolinecolor="#2a4a6a", gridcolor="#1a2a3a"),
+                font=dict(family="Share Tech Mono", color="#c0d4e8", size=11),
+                legend=dict(orientation="h", y=-0.2, bgcolor="rgba(0,0,0,0)"),
+                margin=dict(l=10, r=10, t=20, b=10))
+            st.plotly_chart(fig, use_container_width=True)
+            if si_df.empty and ge_df.empty:
+                st.info("Input a voltage in the sidebar — current is auto-calculated and logged.")
+
+        with col_t:
+            st.markdown(f"**{material} — Logged Data**")
+            key = "si_data" if material == "Silicon (Si)" else "ge_data"
+            st.dataframe(st.session_state[key], use_container_width=True, hide_index=True)
+            st.caption("Current computed via Shockley equation: I = Iₛ(e^(V/ηVₜ) − 1)")
 
     # ── Assessment ──
     with tab_assess:
@@ -582,13 +596,13 @@ elif PAGE == "⚡ P2: Rectification":
         <strong>{nm}</strong><br><br>
         {desc}<br><br>
         <strong>Key Equations:</strong><br>
-        &nbsp;&nbsp; V_DC = {vdc_eq}<br>
-        &nbsp;&nbsp; V_RMS = {vrms_eq}<br>
-        &nbsp;&nbsp; Ripple Factor γ = {gam_eq}<br>
-        &nbsp;&nbsp; Efficiency η = {eta_eq}<br>
-        &nbsp;&nbsp; PIV per diode = {piv_eq}<br>
-        &nbsp;&nbsp; Diodes required = {nd_eq}<br>
-        &nbsp;&nbsp; Centre-tap transformer = {ct}
+        &nbsp;&nbsp;• V_DC = {vdc_eq}<br>
+        &nbsp;&nbsp;• V_RMS = {vrms_eq}<br>
+        &nbsp;&nbsp;• Ripple Factor γ = {gam_eq}<br>
+        &nbsp;&nbsp;• Efficiency η = {eta_eq}<br>
+        &nbsp;&nbsp;• PIV per diode = {piv_eq}<br>
+        &nbsp;&nbsp;• Diodes required = {nd_eq}<br>
+        &nbsp;&nbsp;• Centre-tap transformer = {ct}
         </div>""", unsafe_allow_html=True)
 
         st.markdown('<p class="sec">// Circuit Diagram</p>', unsafe_allow_html=True)
@@ -629,11 +643,11 @@ elif PAGE == "⚡ P2: Rectification":
               <line x1="110" y1="75" x2="200" y2="75" class="w"/>
               <polygon points="200,61 200,89 234,75" style="fill:#818cf8;stroke:#818cf8"/>
               <line x1="234" y1="60" x2="234" y2="90" style="stroke:#818cf8;stroke-width:3"/>
-              <text x="217" y="52" text-anchor="middle" style="fill:#818cf8;font-family:monospace;font-size:11px;font-weight:bold">D1</text>
+              <text x="217" y="52" text-anchor="middle" style="fill:#818cf8;font-family:monospace;font-size:11px;font-weight:bold">D₁</text>
               <line x1="110" y1="145" x2="200" y2="145" class="w"/>
               <polygon points="200,131 200,159 234,145" style="fill:#818cf8;stroke:#818cf8"/>
               <line x1="234" y1="130" x2="234" y2="160" style="stroke:#818cf8;stroke-width:3"/>
-              <text x="217" y="174" text-anchor="middle" style="fill:#818cf8;font-family:monospace;font-size:11px;font-weight:bold">D2</text>
+              <text x="217" y="174" text-anchor="middle" style="fill:#818cf8;font-family:monospace;font-size:11px;font-weight:bold">D₂</text>
               <line x1="234" y1="75"  x2="330" y2="75"  class="w"/>
               <line x1="234" y1="145" x2="330" y2="145" class="w"/>
               <line x1="330" y1="75"  x2="330" y2="94"  class="w"/>
@@ -668,25 +682,25 @@ elif PAGE == "⚡ P2: Rectification":
               <polygon points="240,90 256,78 248,102" style="fill:#fb923c;stroke:#fb923c"/>
               <line x1="256" y1="68" x2="256" y2="90" style="stroke:#fb923c;stroke-width:3"/>
               <line x1="256" y1="79" x2="300" y2="55" class="w"/>
-              <text x="230" y="70" style="fill:#fb923c;font-family:monospace;font-size:10px;font-weight:bold">D1</text>
+              <text x="230" y="70" style="fill:#fb923c;font-family:monospace;font-size:10px;font-weight:bold">D₁</text>
               <!-- D3 -->
               <line x1="300" y1="55"  x2="344" y2="78" class="w"/>
               <polygon points="344,78 336,100 352,90" style="fill:#fb923c;stroke:#fb923c"/>
               <line x1="352" y1="68" x2="352" y2="92" style="stroke:#fb923c;stroke-width:3"/>
               <line x1="352" y1="80" x2="390" y2="115" class="w"/>
-              <text x="348" y="62" style="fill:#fb923c;font-family:monospace;font-size:10px;font-weight:bold">D3</text>
+              <text x="348" y="62" style="fill:#fb923c;font-family:monospace;font-size:10px;font-weight:bold">D₃</text>
               <!-- D4 -->
               <line x1="210" y1="115" x2="240" y2="140" class="w"/>
               <polygon points="240,140 256,152 248,128" style="fill:#fb923c;stroke:#fb923c"/>
               <line x1="256" y1="142" x2="256" y2="164" style="stroke:#fb923c;stroke-width:3"/>
               <line x1="256" y1="153" x2="300" y2="175" class="w"/>
-              <text x="218" y="166" style="fill:#fb923c;font-family:monospace;font-size:10px;font-weight:bold">D4</text>
+              <text x="218" y="166" style="fill:#fb923c;font-family:monospace;font-size:10px;font-weight:bold">D₄</text>
               <!-- D2 -->
               <line x1="300" y1="175" x2="344" y2="152" class="w"/>
               <polygon points="344,152 336,130 352,142" style="fill:#fb923c;stroke:#fb923c"/>
               <line x1="352" y1="130" x2="352" y2="154" style="stroke:#fb923c;stroke-width:3"/>
               <line x1="352" y1="141" x2="390" y2="115" class="w"/>
-              <text x="348" y="172" style="fill:#fb923c;font-family:monospace;font-size:10px;font-weight:bold">D2</text>
+              <text x="348" y="172" style="fill:#fb923c;font-family:monospace;font-size:10px;font-weight:bold">D₂</text>
               <!-- Load -->
               <line x1="390" y1="115" x2="440" y2="115" class="w"/>
               <rect x="440" y="94"  width="80" height="42" rx="4" style="fill:#2a1a0a;stroke:#fb923c;stroke-width:1.8"/>
@@ -806,13 +820,13 @@ elif PAGE == "🛡️ P3: Zener Stabilizer":
         across its terminals, acting as a voltage reference. The series resistor Rs limits current and
         absorbs the difference between input and regulated output.<br><br>
         <strong>Operating Regions:</strong><br>
-        &nbsp;&nbsp; <em>Pre-breakdown (Vs &lt; Vz):</em> Zener is open; output = resistive divider Vo = Vs·RL/(Rs+RL)<br>
-        &nbsp;&nbsp; <em>Regulation (Vs &gt; Vz):</em> Zener clamps output to apprxm Vz; excess voltage dropped across Rs<br><br>
+        &nbsp;&nbsp;• <em>Pre-breakdown (Vs &lt; Vz):</em> Zener is open; output = resistive divider Vo = Vs·RL/(Rs+RL)<br>
+        &nbsp;&nbsp;• <em>Regulation (Vs &gt; Vz):</em> Zener clamps output to ≈ Vz; excess voltage dropped across Rs<br><br>
         <strong>Key Equations:</strong><br>
-        &nbsp;&nbsp; I_s = (Vs - Vz) / Rs<br>
-        &nbsp;&nbsp; I_L = Vz / RL<br>
-        &nbsp;&nbsp; I_z = I_s - I_L  (must remain &gt; I_z(min))<br>
-        &nbsp;&nbsp; P_z = Vz * I_z  (must not exceed P_z(max))<br><br>
+        &nbsp;&nbsp;• I_s = (Vs − Vz) / Rs<br>
+        &nbsp;&nbsp;• I_L = Vz / RL<br>
+        &nbsp;&nbsp;• I_z = I_s − I_L  (must remain &gt; I_z(min))<br>
+        &nbsp;&nbsp;• P_z = Vz × I_z  (must not exceed P_z(max))<br><br>
         <strong>Current Zener Voltage:</strong> Vz = {vz} V &nbsp;|&nbsp; Rs = {rs} Ω &nbsp;|&nbsp; RL = {rl} Ω
         </div>""", unsafe_allow_html=True)
 
@@ -828,7 +842,7 @@ elif PAGE == "🛡️ P3: Zener Stabilizer":
           <line x1="80" y1="65" x2="160" y2="65" class="w"/>
           <!-- Series resistor Rs -->
           <rect x="160" y="50" width="90" height="30" rx="4" style="fill:#1a2a1a;stroke:#60a5fa;stroke-width:1.8"/>
-          <text x="205" y="69" text-anchor="middle" style="fill:#60a5fa;font-family:monospace;font-size:10px">Rs {rs:.Of}Ω</text>
+          <text x="205" y="69" text-anchor="middle" style="fill:#60a5fa;font-family:monospace;font-size:10px">Rs {rs:.0f}Ω</text>
           <!-- wire after Rs -->
           <line x1="250" y1="65" x2="360" y2="65" class="w"/>
           <!-- node dot -->
@@ -1108,5 +1122,5 @@ elif PAGE == "📡 P4: BJT Analysis":
 # FOOTER
 # ═══════════════════════════════════════════════════════════════════════════════
 st.markdown("---")
-st.caption(f"🔬 Physics/Electronics Laboratory Platform · Student: `{st.session_state['student_id']}` · "
+st.caption(f"🔬 HND Electronics & Physics Laboratory Platform · Student: `{st.session_state['student_id']}` · "
            f"Session Active · {datetime.now().strftime('%Y-%m-%d')}")
