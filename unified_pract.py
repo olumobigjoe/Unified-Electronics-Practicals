@@ -582,13 +582,13 @@ elif PAGE == "⚡ P2: Rectification":
         <strong>{nm}</strong><br><br>
         {desc}<br><br>
         <strong>Key Equations:</strong><br>
-        &nbsp;&nbsp;• V_DC = {vdc_eq}<br>
-        &nbsp;&nbsp;• V_RMS = {vrms_eq}<br>
-        &nbsp;&nbsp;• Ripple Factor γ = {gam_eq}<br>
-        &nbsp;&nbsp;• Efficiency η = {eta_eq}<br>
-        &nbsp;&nbsp;• PIV per diode = {piv_eq}<br>
-        &nbsp;&nbsp;• Diodes required = {nd_eq}<br>
-        &nbsp;&nbsp;• Centre-tap transformer = {ct}
+        &nbsp;&nbsp; V_DC = {vdc_eq}<br>
+        &nbsp;&nbsp; V_RMS = {vrms_eq}<br>
+        &nbsp;&nbsp; Ripple Factor γ = {gam_eq}<br>
+        &nbsp;&nbsp; Efficiency η = {eta_eq}<br>
+        &nbsp;&nbsp; PIV per diode = {piv_eq}<br>
+        &nbsp;&nbsp; Diodes required = {nd_eq}<br>
+        &nbsp;&nbsp; Centre-tap transformer = {ct}
         </div>""", unsafe_allow_html=True)
 
         st.markdown('<p class="sec">// Circuit Diagram</p>', unsafe_allow_html=True)
